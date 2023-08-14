@@ -45,11 +45,10 @@ function task-runner {
         if $RESULT
         then
                 echo "[OK] $DESCRIPTION; runtime: $runtime_print; details: $LOG_FILE_NAME"
-                RETURNCODE=0
         else
                 echo "[ERROR] $DESCRIPTION; runtime: $runtime_print; details: $LOG_FILE_NAME"
-                RETURNCODE=1
         fi
 
+	return $RESULT
 }
 
