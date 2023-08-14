@@ -25,7 +25,8 @@ function task-runner {
 	echo "Task started: $(date --iso-8601=seconds)" >> "$LOG_FILE_NAME"
 
 	# Execution
-	RESULT=$(eval $TO_BE_RUN >> "$LOG_FILE_NAME" 2>&1)
+	eval "$TO_BE_RUN" >> "$LOG_FILE_NAME" 2>&1
+	RESULT=$?
 
 	# Evaluation
 	TS_FINISH=`date +%s`
@@ -38,15 +39,15 @@ function task-runner {
 	runtime_print=$runtime_hrs:$runtime_mins:$runtime_secs
 
 	# Footer
-	echo "Task finished: $(date --iso-8601=seconds), runtime: $runtime_print" >> "$LOG_FILE_NAME" 
+	echo "Task finished: $(date --iso-8601=seconds); return code: $RESULT; runtime: $runtime_print" >> "$LOG_FILE_NAME" 
 	echo "------------------------------------------------------------------" >> "$LOG_FILE_NAME"
 
 	# Return
-        if $RESULT
+        if [ $RESULT -eq 0 ]
         then
-                echo "[OK] $DESCRIPTION; runtime: $runtime_print; details: $LOG_FILE_NAME"
+                echo "[OK] $DESCRIPTION; runtime: $runtime_print; log: $LOG_FILE_NAME"
         else
-                echo "[ERROR] $DESCRIPTION; runtime: $runtime_print; details: $LOG_FILE_NAME"
+                echo "[ERROR] $DESCRIPTION; runtime: $runtime_print; log: $LOG_FILE_NAME"
         fi
 
 	return $RESULT
